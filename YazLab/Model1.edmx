@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="UrunlerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_admin">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdminName" Type="varchar" MaxLength="100" />
+          <Property Name="AdminSifre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_markalar">
+          <Key>
+            <PropertyRef Name="MarkaId" />
+          </Key>
+          <Property Name="MarkaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MarkaAd" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_modeller">
+          <Key>
+            <PropertyRef Name="ModelId" />
+          </Key>
+          <Property Name="ModelId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ModelNo" Type="varchar" MaxLength="200" />
+          <Property Name="MarkaId" Type="int" />
+          <Property Name="ModelResim" Type="varchar" MaxLength="200" />
+          <Property Name="ModelPuan" Type="decimal" Precision="2" Scale="1" />
+        </EntityType>
+        <EntityType Name="tbl_siteler">
+          <Key>
+            <PropertyRef Name="SiteId" />
+          </Key>
+          <Property Name="SiteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SiteAd" Type="varchar" MaxLength="20" />
+          <Property Name="SiteLogo" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="tbl_urunAciklama">
+          <Key>
+            <PropertyRef Name="UrunAciklamaId" />
+          </Key>
+          <Property Name="UrunAciklamaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UrunId" Type="int" />
+          <Property Name="UrunMarkaId" Type="int" />
+          <Property Name="isletimSistemi" Type="varchar" MaxLength="50" />
+          <Property Name="islemciTip" Type="varchar" MaxLength="50" />
+          <Property Name="islemciNesli" Type="varchar" MaxLength="50" />
+          <Property Name="ram" Type="varchar" MaxLength="50" />
+          <Property Name="diskBoyut" Type="varchar" MaxLength="50" />
+          <Property Name="diskTur" Type="varchar" MaxLength="50" />
+          <Property Name="ekranBoyut" Type="varchar" MaxLength="50" />
+          <Property Name="siteId" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_urunler">
+          <Key>
+            <PropertyRef Name="UrunId" />
+          </Key>
+          <Property Name="UrunId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UrunAd" Type="varchar" MaxLength="300" />
+          <Property Name="ModelId" Type="int" />
+          <Property Name="UrunUrl" Type="varchar" MaxLength="200" />
+          <Property Name="Fiyat" Type="decimal" Precision="8" Scale="2" />
+          <Property Name="EklenmeTarih" Type="smalldatetime" />
+        </EntityType>
+        <Association Name="FK_tbl_modeller_tbl_markalar">
+          <End Role="tbl_markalar" Type="Self.tbl_markalar" Multiplicity="0..1" />
+          <End Role="tbl_modeller" Type="Self.tbl_modeller" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_markalar">
+              <PropertyRef Name="MarkaId" />
+            </Principal>
+            <Dependent Role="tbl_modeller">
+              <PropertyRef Name="MarkaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunAciklama_tbl_markalar">
+          <End Role="tbl_markalar" Type="Self.tbl_markalar" Multiplicity="0..1" />
+          <End Role="tbl_urunAciklama" Type="Self.tbl_urunAciklama" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_markalar">
+              <PropertyRef Name="MarkaId" />
+            </Principal>
+            <Dependent Role="tbl_urunAciklama">
+              <PropertyRef Name="UrunMarkaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunAciklama_tbl_siteler">
+          <End Role="tbl_siteler" Type="Self.tbl_siteler" Multiplicity="0..1" />
+          <End Role="tbl_urunAciklama" Type="Self.tbl_urunAciklama" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_siteler">
+              <PropertyRef Name="SiteId" />
+            </Principal>
+            <Dependent Role="tbl_urunAciklama">
+              <PropertyRef Name="siteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunAciklama_tbl_urunler">
+          <End Role="tbl_urunler" Type="Self.tbl_urunler" Multiplicity="0..1" />
+          <End Role="tbl_urunAciklama" Type="Self.tbl_urunAciklama" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_urunler">
+              <PropertyRef Name="UrunId" />
+            </Principal>
+            <Dependent Role="tbl_urunAciklama">
+              <PropertyRef Name="UrunId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunler_tbl_modeller">
+          <End Role="tbl_modeller" Type="Self.tbl_modeller" Multiplicity="0..1" />
+          <End Role="tbl_urunler" Type="Self.tbl_urunler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_modeller">
+              <PropertyRef Name="ModelId" />
+            </Principal>
+            <Dependent Role="tbl_urunler">
+              <PropertyRef Name="ModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="MODELLER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="UrunlerModelStoreContainer">
+          <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_markalar" EntityType="Self.tbl_markalar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_modeller" EntityType="Self.tbl_modeller" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_siteler" EntityType="Self.tbl_siteler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_urunAciklama" EntityType="Self.tbl_urunAciklama" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_urunler" EntityType="Self.tbl_urunler" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tbl_modeller_tbl_markalar" Association="Self.FK_tbl_modeller_tbl_markalar">
+            <End Role="tbl_markalar" EntitySet="tbl_markalar" />
+            <End Role="tbl_modeller" EntitySet="tbl_modeller" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunAciklama_tbl_markalar" Association="Self.FK_tbl_urunAciklama_tbl_markalar">
+            <End Role="tbl_markalar" EntitySet="tbl_markalar" />
+            <End Role="tbl_urunAciklama" EntitySet="tbl_urunAciklama" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunAciklama_tbl_siteler" Association="Self.FK_tbl_urunAciklama_tbl_siteler">
+            <End Role="tbl_siteler" EntitySet="tbl_siteler" />
+            <End Role="tbl_urunAciklama" EntitySet="tbl_urunAciklama" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunAciklama_tbl_urunler" Association="Self.FK_tbl_urunAciklama_tbl_urunler">
+            <End Role="tbl_urunler" EntitySet="tbl_urunler" />
+            <End Role="tbl_urunAciklama" EntitySet="tbl_urunAciklama" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunler_tbl_modeller" Association="Self.FK_tbl_urunler_tbl_modeller">
+            <End Role="tbl_modeller" EntitySet="tbl_modeller" />
+            <End Role="tbl_urunler" EntitySet="tbl_urunler" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UrunlerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tbl_markalar">
+          <Key>
+            <PropertyRef Name="MarkaId" />
+          </Key>
+          <Property Name="MarkaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MarkaAd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_modeller" Relationship="Self.FK_tbl_modeller_tbl_markalar" FromRole="tbl_markalar" ToRole="tbl_modeller" />
+          <NavigationProperty Name="tbl_urunAciklama" Relationship="Self.FK_tbl_urunAciklama_tbl_markalar" FromRole="tbl_markalar" ToRole="tbl_urunAciklama" />
+        </EntityType>
+        <EntityType Name="tbl_modeller">
+          <Key>
+            <PropertyRef Name="ModelId" />
+          </Key>
+          <Property Name="ModelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ModelNo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="MarkaId" Type="Int32" />
+          <Property Name="ModelResim" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ModelPuan" Type="Decimal" Precision="2" Scale="1" />
+          <NavigationProperty Name="tbl_markalar" Relationship="Self.FK_tbl_modeller_tbl_markalar" FromRole="tbl_modeller" ToRole="tbl_markalar" />
+          <NavigationProperty Name="tbl_urunler" Relationship="Self.FK_tbl_urunler_tbl_modeller" FromRole="tbl_modeller" ToRole="tbl_urunler" />
+        </EntityType>
+        <EntityType Name="tbl_siteler">
+          <Key>
+            <PropertyRef Name="SiteId" />
+          </Key>
+          <Property Name="SiteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SiteAd" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SiteLogo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tbl_urunAciklama" Relationship="Self.FK_tbl_urunAciklama_tbl_siteler" FromRole="tbl_siteler" ToRole="tbl_urunAciklama" />
+        </EntityType>
+        <EntityType Name="tbl_urunAciklama">
+          <Key>
+            <PropertyRef Name="UrunAciklamaId" />
+          </Key>
+          <Property Name="UrunAciklamaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UrunId" Type="Int32" />
+          <Property Name="UrunMarkaId" Type="Int32" />
+          <Property Name="isletimSistemi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="islemciTip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="islemciNesli" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ram" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="diskBoyut" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="diskTur" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ekranBoyut" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="siteId" Type="Int32" />
+          <NavigationProperty Name="tbl_markalar" Relationship="Self.FK_tbl_urunAciklama_tbl_markalar" FromRole="tbl_urunAciklama" ToRole="tbl_markalar" />
+          <NavigationProperty Name="tbl_siteler" Relationship="Self.FK_tbl_urunAciklama_tbl_siteler" FromRole="tbl_urunAciklama" ToRole="tbl_siteler" />
+          <NavigationProperty Name="tbl_urunler" Relationship="Self.FK_tbl_urunAciklama_tbl_urunler" FromRole="tbl_urunAciklama" ToRole="tbl_urunler" />
+        </EntityType>
+        <EntityType Name="tbl_urunler">
+          <Key>
+            <PropertyRef Name="UrunId" />
+          </Key>
+          <Property Name="UrunId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UrunAd" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="ModelId" Type="Int32" />
+          <Property Name="UrunUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Fiyat" Type="Decimal" Precision="8" Scale="2" />
+          <Property Name="EklenmeTarih" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="tbl_modeller" Relationship="Self.FK_tbl_urunler_tbl_modeller" FromRole="tbl_urunler" ToRole="tbl_modeller" />
+          <NavigationProperty Name="tbl_urunAciklama" Relationship="Self.FK_tbl_urunAciklama_tbl_urunler" FromRole="tbl_urunler" ToRole="tbl_urunAciklama" />
+        </EntityType>
+        <Association Name="FK_tbl_modeller_tbl_markalar">
+          <End Role="tbl_markalar" Type="Self.tbl_markalar" Multiplicity="0..1" />
+          <End Role="tbl_modeller" Type="Self.tbl_modeller" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_markalar">
+              <PropertyRef Name="MarkaId" />
+            </Principal>
+            <Dependent Role="tbl_modeller">
+              <PropertyRef Name="MarkaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunAciklama_tbl_markalar">
+          <End Role="tbl_markalar" Type="Self.tbl_markalar" Multiplicity="0..1" />
+          <End Role="tbl_urunAciklama" Type="Self.tbl_urunAciklama" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_markalar">
+              <PropertyRef Name="MarkaId" />
+            </Principal>
+            <Dependent Role="tbl_urunAciklama">
+              <PropertyRef Name="UrunMarkaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunler_tbl_modeller">
+          <End Role="tbl_modeller" Type="Self.tbl_modeller" Multiplicity="0..1" />
+          <End Role="tbl_urunler" Type="Self.tbl_urunler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_modeller">
+              <PropertyRef Name="ModelId" />
+            </Principal>
+            <Dependent Role="tbl_urunler">
+              <PropertyRef Name="ModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunAciklama_tbl_siteler">
+          <End Role="tbl_siteler" Type="Self.tbl_siteler" Multiplicity="0..1" />
+          <End Role="tbl_urunAciklama" Type="Self.tbl_urunAciklama" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_siteler">
+              <PropertyRef Name="SiteId" />
+            </Principal>
+            <Dependent Role="tbl_urunAciklama">
+              <PropertyRef Name="siteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_urunAciklama_tbl_urunler">
+          <End Role="tbl_urunler" Type="Self.tbl_urunler" Multiplicity="0..1" />
+          <End Role="tbl_urunAciklama" Type="Self.tbl_urunAciklama" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_urunler">
+              <PropertyRef Name="UrunId" />
+            </Principal>
+            <Dependent Role="tbl_urunAciklama">
+              <PropertyRef Name="UrunId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UrunlerEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tbl_markalar" EntityType="Self.tbl_markalar" />
+          <EntitySet Name="tbl_modeller" EntityType="Self.tbl_modeller" />
+          <EntitySet Name="tbl_siteler" EntityType="Self.tbl_siteler" />
+          <EntitySet Name="tbl_urunAciklama" EntityType="Self.tbl_urunAciklama" />
+          <EntitySet Name="tbl_urunler" EntityType="Self.tbl_urunler" />
+          <AssociationSet Name="FK_tbl_modeller_tbl_markalar" Association="Self.FK_tbl_modeller_tbl_markalar">
+            <End Role="tbl_markalar" EntitySet="tbl_markalar" />
+            <End Role="tbl_modeller" EntitySet="tbl_modeller" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunAciklama_tbl_markalar" Association="Self.FK_tbl_urunAciklama_tbl_markalar">
+            <End Role="tbl_markalar" EntitySet="tbl_markalar" />
+            <End Role="tbl_urunAciklama" EntitySet="tbl_urunAciklama" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunler_tbl_modeller" Association="Self.FK_tbl_urunler_tbl_modeller">
+            <End Role="tbl_modeller" EntitySet="tbl_modeller" />
+            <End Role="tbl_urunler" EntitySet="tbl_urunler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunAciklama_tbl_siteler" Association="Self.FK_tbl_urunAciklama_tbl_siteler">
+            <End Role="tbl_siteler" EntitySet="tbl_siteler" />
+            <End Role="tbl_urunAciklama" EntitySet="tbl_urunAciklama" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_urunAciklama_tbl_urunler" Association="Self.FK_tbl_urunAciklama_tbl_urunler">
+            <End Role="tbl_urunler" EntitySet="tbl_urunler" />
+            <End Role="tbl_urunAciklama" EntitySet="tbl_urunAciklama" />
+          </AssociationSet>
+          <FunctionImport Name="MODELLER" ReturnType="Collection(Int32)" />
+          <EntitySet Name="tbl_admin" EntityType="UrunlerModel.tbl_admin" />
+        </EntityContainer>
+        <EntityType Name="tbl_admin">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdminName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AdminSifre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UrunlerModelStoreContainer" CdmEntityContainer="UrunlerEntities2">
+          <EntitySetMapping Name="tbl_markalar">
+            <EntityTypeMapping TypeName="UrunlerModel.tbl_markalar">
+              <MappingFragment StoreEntitySet="tbl_markalar">
+                <ScalarProperty Name="MarkaId" ColumnName="MarkaId" />
+                <ScalarProperty Name="MarkaAd" ColumnName="MarkaAd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_modeller">
+            <EntityTypeMapping TypeName="UrunlerModel.tbl_modeller">
+              <MappingFragment StoreEntitySet="tbl_modeller">
+                <ScalarProperty Name="ModelId" ColumnName="ModelId" />
+                <ScalarProperty Name="ModelNo" ColumnName="ModelNo" />
+                <ScalarProperty Name="MarkaId" ColumnName="MarkaId" />
+                <ScalarProperty Name="ModelResim" ColumnName="ModelResim" />
+                <ScalarProperty Name="ModelPuan" ColumnName="ModelPuan" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_siteler">
+            <EntityTypeMapping TypeName="UrunlerModel.tbl_siteler">
+              <MappingFragment StoreEntitySet="tbl_siteler">
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="SiteAd" ColumnName="SiteAd" />
+                <ScalarProperty Name="SiteLogo" ColumnName="SiteLogo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_urunAciklama">
+            <EntityTypeMapping TypeName="UrunlerModel.tbl_urunAciklama">
+              <MappingFragment StoreEntitySet="tbl_urunAciklama">
+                <ScalarProperty Name="UrunAciklamaId" ColumnName="UrunAciklamaId" />
+                <ScalarProperty Name="UrunId" ColumnName="UrunId" />
+                <ScalarProperty Name="UrunMarkaId" ColumnName="UrunMarkaId" />
+                <ScalarProperty Name="isletimSistemi" ColumnName="isletimSistemi" />
+                <ScalarProperty Name="islemciTip" ColumnName="islemciTip" />
+                <ScalarProperty Name="islemciNesli" ColumnName="islemciNesli" />
+                <ScalarProperty Name="ram" ColumnName="ram" />
+                <ScalarProperty Name="diskBoyut" ColumnName="diskBoyut" />
+                <ScalarProperty Name="diskTur" ColumnName="diskTur" />
+                <ScalarProperty Name="ekranBoyut" ColumnName="ekranBoyut" />
+                <ScalarProperty Name="siteId" ColumnName="siteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_urunler">
+            <EntityTypeMapping TypeName="UrunlerModel.tbl_urunler">
+              <MappingFragment StoreEntitySet="tbl_urunler">
+                <ScalarProperty Name="UrunId" ColumnName="UrunId" />
+                <ScalarProperty Name="UrunAd" ColumnName="UrunAd" />
+                <ScalarProperty Name="ModelId" ColumnName="ModelId" />
+                <ScalarProperty Name="UrunUrl" ColumnName="UrunUrl" />
+                <ScalarProperty Name="Fiyat" ColumnName="Fiyat" />
+                <ScalarProperty Name="EklenmeTarih" ColumnName="EklenmeTarih" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="MODELLER" FunctionName="UrunlerModel.Store.MODELLER" />
+          <EntitySetMapping Name="tbl_admin">
+            <EntityTypeMapping TypeName="UrunlerModel.tbl_admin">
+              <MappingFragment StoreEntitySet="tbl_admin">
+                <ScalarProperty Name="AdminSifre" ColumnName="AdminSifre" />
+                <ScalarProperty Name="AdminName" ColumnName="AdminName" />
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
